@@ -6,28 +6,13 @@ const currentWeather = {
 };
 
 function download() {
-  const l = document.getElementById("location");
-  const t = document.getElementById("temperature");
-  const w = document.getElementById("weatherCondition");
-  const d = document.getElementById("date");
+  const temperature = document.getElementById("temperature");
+  const weatherCondition = document.getElementById("weatherCondition");
+  const date = document.getElementById("date");
 
-  l.lastChild.replaceWith(currentWeather.location);
-  t.lastChild.replaceWith(currentWeather.temperature);
-  w.lastChild.replaceWith(currentWeather.weatherCondition);
-  d.lastChild.replaceWith(currentWeather.date);
+  temperature.innerText = currentWeather.temperature;
+  weatherCondition.innerText = currentWeather.weatherCondition;
+  date.innerText = currentWeather.date;
 }
 
 document.getElementById("btn").addEventListener("click", download);
-
-// function download() {
-//   document.getElementById("location").replaceWith(currentWeather.location);
-//   document
-//     .getElementById("temperature")
-//     .replaceWith(currentWeather.temperature);
-//   document
-//     .getElementById("weatherCondition")
-//     .replaceWith(currentWeather.weatherCondition);
-//   document.getElementById("date").replaceWith(currentWeather.date);
-// }
-
-// document.getElementById("btn").addEventListener("click", download);
