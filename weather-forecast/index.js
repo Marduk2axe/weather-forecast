@@ -5,85 +5,87 @@ const currentWeather = {
   date: "2022-04-12",
 };
 
-// function download() {
-//   const temperature = document.getElementById("temperature");
-//   const weatherCondition = document.getElementById("weatherCondition");
-//   const date = document.getElementById("date");
-//   const newdate = new Date(currentWeather.date);
+function capitalizeFirstLetter(str) {
+  return str[0].toUpperCase() + str.slice(1);
+}
 
-//   temperature.innerText = currentWeather.temperature;
-//   weatherCondition.innerText = currentWeather.weatherCondition;
-//   date.innerText = newdate.getDate();
-//   if (date.textContent < 10) {
-//     date.textContent = "0" + date.textContent;
-//   }
-// }
+function getWeatherImageAtrributes(weatherCondition) {
+  const path = `./images/${weatherCondition}.png`;
+  const alt = `icon_${weatherCondition}`;
+  const id = `icon-${weatherCondition}`;
+  return { path, id, alt };
+}
 
-// function loading() {
-//   const icon = document.getElementById("icon");
-//   const weatherCondition = document.getElementById("weatherCondition");
-//   const newImg = document.createElement("img");
-//   newImg.src = "./images/snowy.png";
-//   newImg.className = "icon";
-//   newImg.id = "icon";
-//   newImg.alt = "snowy";
-//   if (weatherCondition.textContent == "snowy") {
-//     icon.replaceWith(newImg);
-//   }
-// }
+function getWeatherData(weather) {
+  const {
+    location: currentLocation,
+    temperature: currentTemperature,
+    weatherCondition: currentWeatherCondition,
+    date: currentDate,
+  } = weather;
+  const location = capitalizeFirstLetter(currentLocation);
+  const date = new Date(currentDate);
+  const monthShort = date.toLocaleDateString("en-EN", { month: "short" });
+  const weekDay = date.toLocaleDateString("en-EN", { weekday: "long" });
+  const dateNumber = date
+    .getDate()
+    .toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
+  const formattedDate = `${dateNumber} ${monthShort}`;
+  const temperature = `${currentTemperature}˚`;
+  const weatherCondition = capitalizeFirstLetter(currentWeatherCondition);
+  const imageAttributes = getWeatherImageAtrributes(currentWeatherCondition);
+  return {
+    location,
+    weekDay,
+    formattedDate,
+    temperature,
+    weatherCondition,
+    imageAttributes,
+  };
+}
 
-// document.getElementById("btn").addEventListener("click", download);
+function getCardElements() {
+  return [
+    "day-of-the-week",
+    "date",
+    "icon",
+    "temperature",
+    "weatherCondition",
+  ].map((id) => document.getElementById(id));
+}
 
-// document.getElementById("btn").addEventListener("click", loading);
-
-const newDate = document.createElement("span");
-newDate.className = "date";
-newDate.id = "date";
-
-const newImg = document.createElement("img");
-newImg.src = "./images/${currentWeather.weatherCondition}.png"; //не понял про динамический путь, пока так оставил
-newImg.className = "icon";
-newImg.id = "icon";
-newImg.alt = "icon_weather";
-
-const newTemperature = document.createElement("div");
-newTemperature.className = "temperature";
-newTemperature.id = "temperature";
-
-const newWeatherCondition = document.createElement("span");
-newWeatherCondition.className = "weather-description";
-newWeatherCondition.id = "weatherCondition";
-
-const date = document.getElementById("date");
-
-const icon = document.getElementById("icon");
-
-const temperature = document.getElementById("temperature");
-
-const weatherCondition = document.getElementById("weatherCondition");
+function generateWeatherImage(imageAttributes) {
+  const newImg = document.createElement("img");
+  newImg.src = imageAttributes.path;
+  newImg.className = "icon";
+  newImg.id = imageAttributes.id;
+  newImg.alt = imageAttributes.alt;
+  return newImg;
+}
 
 function draw() {
-  const newdate = new Date(currentWeather.date);
+  const {
+    location,
+    weekDay,
+    formattedDate,
+    temperature,
+    weatherCondition,
+    imageAttributes,
+  } = getWeatherData(currentWeather);
+  const [
+    weekDayElement,
+    dateElement,
+    weatherImageElement,
+    temperatureElement,
+    weatherConditionsElement,
+  ] = getCardElements();
+  const weatherImage = generateWeatherImage(imageAttributes);
 
-  newDate.innerHTML = newdate.getDate();
-
-  newTemperature.innerHTML = currentWeather.temperature;
-
-  newWeatherCondition.innerHTML = currentWeather.weatherCondition;
-
-  newImg.src = "./images/snowy.png"; //не понял про динамический путь, пока так оставил
-
-  date.replaceWith(newDate);
-
-  icon.replaceWith(newImg);
-
-  temperature.replaceWith(newTemperature);
-
-  weatherCondition.replaceWith(newWeatherCondition);
-
-  if (newDate.textContent < 10) {
-    newDate.textContent = "0" + newDate.textContent;
-  }
+  weekDayElement.innerHTML = weekDay;
+  dateElement.innerHTML = formattedDate;
+  temperatureElement.innerHTML = temperature;
+  weatherConditionsElement.innerHTML = weatherCondition;
+  weatherImageElement.replaceWith(weatherImage);
 }
 
 document.getElementById("btn").addEventListener("click", draw);
