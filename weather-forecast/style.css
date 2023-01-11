@@ -22,7 +22,7 @@ span {
   height: 120px;
   border-radius: 20px;
   display: grid;
-  grid-template-rows: 20px 16px 60px;
+  grid-template-rows: 21px 18px 46px;
 }
 
 .title {
@@ -31,7 +31,7 @@ span {
 }
 
 .in-city {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .time-description {
@@ -84,4 +84,27 @@ span {
 
 div.temperature:after {
   content: "\°";
+}
+
+.btn {
+  font-size: 7px;
+  font-weight: 600;
+  width: 32px;
+  height: 2px;
+  color: white;
+  text-decoration: none;
+  padding: 0.8em 1em calc(0.8em + 3px);
+  border-radius: 3px;
+  background: rgb(138, 215, 175);
+  transition: 0.2s;
+  display: block;
+  margin: auto;
+}
+
+.btn:hover {
+  background: rgb(127, 189, 158);
+}
+
+.btn:active {
+  background: rgb(106, 168, 137);
 }
