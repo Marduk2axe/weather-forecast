@@ -5,6 +5,8 @@ const currentWeather = {
   date: "2022-04-12",
 };
 
+const defaultLocationId = "611717";
+
 function capitalizeFirstLetter(str) {
   return str[0].toUpperCase() + str.slice(1);
 }
@@ -88,4 +90,29 @@ function draw() {
   weatherImageElement.replaceWith(weatherImage);
 }
 
-document.getElementById("btn").addEventListener("click", draw);
+function fetchWeather(locationId, callback) {
+  callback();
+}
+
+let openWeatherRequest = new XMLHttpRequest();
+
+openWeatherRequest.open(
+  "GET",
+  "https://api.openweathermap.org/data/2.5/weather?id=611717&appid=1f31ffb5674932f2097e47581526ecad"
+);
+
+openWeatherRequest.send();
+
+openWeatherRequest.onload = function () {
+  if (clickLoad && openWeatherRequest.status == 200) {
+    fetchWeather(defaultLocationId, draw());
+  }
+};
+
+openWeatherRequest.onerror = function () {
+  alert("Запрос не удался");
+};
+
+const clickLoad = document
+  .getElementById("btn")
+  .addEventListener("click", draw);
