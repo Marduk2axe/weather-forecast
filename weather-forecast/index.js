@@ -33,7 +33,7 @@ function getWeatherData(weather) {
     .getDate()
     .toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
   const formattedDate = `${dateNumber} ${monthShort}`;
-  const temperature = `${currentTemperature}˚`;
+  const temperature = `${currentTemperature}`;
   const weatherCondition = capitalizeFirstLetter(currentWeatherCondition);
   const imageAttributes = getWeatherImageAtrributes(currentWeatherCondition);
   return {
@@ -90,29 +90,48 @@ function draw() {
   weatherImageElement.replaceWith(weatherImage);
 }
 
-function fetchWeather(locationId, callback) {
-  callback();
+const urlOpenWeather =
+  "https://api.openweathermap.org/data/2.5/weather?id=611717&appid=1f31ffb5674932f2097e47581526ecad";
+
+function sendRequest(method, url) {
+  return new Promise((resolve, reject) => {
+    const openWeatherRequest = new XMLHttpRequest();
+
+    openWeatherRequest.open(method, url);
+
+    openWeatherRequest.responseType = "json";
+
+    openWeatherRequest.onload = () => {
+      if (openWeatherRequest.status >= 400) {
+        reject(openWeatherRequest.response);
+      } else {
+        resolve(openWeatherRequest.response), draw();
+      }
+    };
+
+    openWeatherRequest.onerror = () => {
+      reject(openWeatherRequest.response);
+    };
+
+    openWeatherRequest.send();
+  });
 }
 
-let openWeatherRequest = new XMLHttpRequest();
+function newCurrentWeather(name, temp, description) {
+  name = currentWeather.location;
+  temp = currentWeather.temperature;
+  description = currentWeather.weatherCondition;
+}
 
-openWeatherRequest.open(
-  "GET",
-  "https://api.openweathermap.org/data/2.5/weather?id=611717&appid=1f31ffb5674932f2097e47581526ecad"
-);
+document.getElementById("btn").addEventListener("click", fetchWeather());
 
-openWeatherRequest.send();
-
-openWeatherRequest.onload = function () {
-  if (clickLoad && openWeatherRequest.status == 200) {
-    fetchWeather(defaultLocationId, draw());
-  }
-};
-
-openWeatherRequest.onerror = function () {
-  alert("Запрос не удался");
-};
-
-const clickLoad = document
-  .getElementById("btn")
-  .addEventListener("click", draw);
+function fetchWeather() {
+  const fetch = sendRequest("GET", urlOpenWeather)
+    .then((response) => {
+      response.map((item) =>
+        newCurrentWeather(item.name, item.temp, item.description)
+      );
+    })
+    .catch((err) => console.log(err));
+  return fetch;
+}
