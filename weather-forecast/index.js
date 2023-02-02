@@ -65,7 +65,7 @@ function generateWeatherImage(imageAttributes) {
   return newImg;
 }
 
-function draw() {
+function draw(weather) {
   const {
     location,
     weekDay,
@@ -73,7 +73,7 @@ function draw() {
     temperature,
     weatherCondition,
     imageAttributes,
-  } = getWeatherData(currentWeather);
+  } = getWeatherData(weather);
   const [
     weekDayElement,
     dateElement,
@@ -105,7 +105,7 @@ function sendRequest(method, url) {
       if (openWeatherRequest.status >= 400) {
         reject(openWeatherRequest.response);
       } else {
-        resolve(openWeatherRequest.response), draw();
+        resolve(openWeatherRequest.response);
       }
     };
 
@@ -117,21 +117,18 @@ function sendRequest(method, url) {
   });
 }
 
-function newCurrentWeather(name, temp, description) {
-  name = currentWeather.location;
-  temp = currentWeather.temperature;
-  description = currentWeather.weatherCondition;
-}
-
-document.getElementById("btn").addEventListener("click", fetchWeather());
-
 function fetchWeather() {
-  const fetch = sendRequest("GET", urlOpenWeather)
-    .then((response) => {
-      response.map((item) =>
-        newCurrentWeather(item.name, item.temp, item.description)
-      );
+  sendRequest("GET", urlOpenWeather)
+    .then((data) => {
+      const weather = {
+        location: data.name,
+        temperature: data.main.temp,
+        weatherCondition: data.weather.main,
+        date: new Date(),
+      };
+      draw(weather);
     })
     .catch((err) => console.log(err));
-  return fetch;
 }
+
+document.getElementById("btn").addEventListener("click", fetchWeather);
