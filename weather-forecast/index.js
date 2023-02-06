@@ -120,15 +120,22 @@ function sendRequest(method, url) {
 function fetchWeather() {
   sendRequest("GET", urlOpenWeather)
     .then((data) => {
+      const temp = data.main.temp;
       const weather = {
         location: data.name,
-        temperature: data.main.temp,
-        weatherCondition: data.weather.main,
+        temperature: convertTemperature(temp),
+        weatherCondition: data.weather[0].main,
         date: new Date(),
       };
       draw(weather);
     })
     .catch((err) => console.log(err));
+}
+
+function convertTemperature(value) {
+  C = value - 273.15;
+  X = Math.round(C);
+  return X;
 }
 
 document.getElementById("btn").addEventListener("click", fetchWeather);
