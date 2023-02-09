@@ -1,10 +1,3 @@
-const currentWeather = {
-  location: "Tbilisi",
-  temperature: 15,
-  weatherCondition: "snowy",
-  date: "2022-04-12",
-};
-
 const defaultLocationId = "611717";
 
 function capitalizeFirstLetter(str) {
@@ -133,9 +126,26 @@ function fetchWeather() {
 }
 
 function convertTemperature(value) {
-  C = value - 273.15;
-  X = Math.round(C);
+  const C = value - 273.15;
+  const X = Math.round(C);
   return X;
 }
 
+function returnConvertTemperature() {
+  const value = document.getElementById("temperature");
+  const amount = parseFloat(value.innerHTML);
+  if (amount < 273) {
+    const a = amount + 273.15;
+    const b = Math.round(a);
+    value.innerHTML = b + `K`;
+  } else {
+    const a = amount - 273.15;
+    const b = Math.round(a);
+    value.innerHTML = b;
+  }
+}
+
 document.getElementById("btn").addEventListener("click", fetchWeather);
+document
+  .getElementById("temp-switch")
+  .addEventListener("click", returnConvertTemperature);
